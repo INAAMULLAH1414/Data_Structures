@@ -1,15 +1,17 @@
-#include<iostream>
-#include<string>
-#include<fstream>
-#include<cstring>
-#include<cmath>
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstring>
+#include <cmath>
 using namespace std;
 template <typename Object>
 class StackADT
 {
 public:
-	virtual bool isEmpty() const = 0;	virtual long sSize() const = 0;
-	virtual Object peek() const = 0;    virtual void push(const Object &) = 0;
+	virtual bool isEmpty() const = 0;
+	virtual long sSize() const = 0;
+	virtual Object peek() const = 0;
+	virtual void push(const Object &) = 0;
 	virtual Object pop() = 0;
 };
 template <typename Object>
@@ -19,37 +21,58 @@ private:
 	class ListNode
 	{
 	public:
-		Object data;      ListNode* next;
+		Object data;
+		ListNode *next;
 		ListNode(Object d)
-		{data = d;    next = NULL;	}
+		{
+			data = d;
+			next = NULL;
+		}
 	};
-	ListNode* head;long top;
+	ListNode *head;
+	long top;
+
 public:
 	StackL()
-	{head = NULL;	top = 0;}
+	{
+		head = NULL;
+		top = 0;
+	}
 	~StackL()
 	{
 		while (head != NULL)
-		{ListNode *junk = head;    head = head->next;   delete junk;}
+		{
+			ListNode *junk = head;
+			head = head->next;
+			delete junk;
+		}
 		head = NULL;
 	}
 	bool isEmpty() const
-	{return (head == NULL);	}
+	{
+		return (head == NULL);
+	}
 	long sSize() const
-	{return top;}
+	{
+		return top;
+	}
 	Object peek() const
 	{
 		if (isEmpty())
-		{return 'n';}
+		{
+			return 'n';
+		}
 		return head->data;
 	}
 	void push(const Object &d)
 	{
 		top++;
 		if (isEmpty())
-		{head = new ListNode(d);
-         	return;}
-		ListNode* tmp = new ListNode(d);
+		{
+			head = new ListNode(d);
+			return;
+		}
+		ListNode *tmp = new ListNode(d);
 		tmp->next = head;
 		head = tmp;
 	}
@@ -59,7 +82,7 @@ public:
 		{
 			throw 0;
 		}
-		ListNode* tmp = head;
+		ListNode *tmp = head;
 		head = head->next;
 		Object o = tmp->data;
 		delete tmp;
@@ -84,10 +107,13 @@ int preceDence(char op)
 	else
 		return -1;
 }
-string makeZero(string inFix) {
+string makeZero(string inFix)
+{
 	int i = inFix.length() - 1;
-	while (inFix[i] != '=' && i != 0) {
-		if (inFix[i] >= 'A' && inFix[i] <= 'Z') {
+	while (inFix[i] != '=' && i != 0)
+	{
+		if (inFix[i] >= 'A' && inFix[i] <= 'Z')
+		{
 			cout << inFix[i] << "=";
 			inFix[i] = '0';
 			cout << inFix[i] << ", ";
@@ -96,15 +122,15 @@ string makeZero(string inFix) {
 	}
 	return inFix;
 }
-void infixToPostfix(const char* inFix, char* postFix)
+void infixToPostfix(const char *inFix, char *postFix)
 {
 	int k = 0;
 	StackADT<char> *s = new StackL<char>;
-	for (int i = 0; i<strlen(inFix); i++)
+	for (int i = 0; i < strlen(inFix); i++)
 	{
 		if (inFix[i] == ' ' || inFix[i] == '=')
 			continue;
-		else if(inFix[i] >= 'A' && inFix[i] <= 'Z')
+		else if (inFix[i] >= 'A' && inFix[i] <= 'Z')
 			postFix[k++] = inFix[i];
 		else if (!isOperator(inFix[i]) || inFix[i] == '~')
 		{
@@ -162,7 +188,7 @@ double opeRation(double op1, double op2, char opr)
 	else
 		throw 0;
 }
-double evaluatePostfix(const char* postFix)
+double evaluatePostfix(const char *postFix)
 {
 	bool flag = false;
 	StackADT<int> *s = new StackL<int>;
@@ -170,19 +196,23 @@ double evaluatePostfix(const char* postFix)
 	bool b = true;
 	for (int i = 0; i < strlen(postFix); i++)
 	{
-		if (postFix[i] >= 'A' && postFix[i] <= 'Z' && b) {
+		if (postFix[i] >= 'A' && postFix[i] <= 'Z' && b)
+		{
 			cr += postFix[i];
 			continue;
 		}
-		else if (postFix[i] >= 'A' && postFix[i] <= 'Z'){
+		else if (postFix[i] >= 'A' && postFix[i] <= 'Z')
+		{
 			continue;
 		}
-		else if (postFix[i] == '~') {
+		else if (postFix[i] == '~')
+		{
 			flag = true;
 		}
 		else if (!isOperator(postFix[i]))
 		{
-			if (flag) {
+			if (flag)
+			{
 				s->push(-1 * (int(postFix[i]) - 48));
 				flag = false;
 			}
@@ -197,22 +227,23 @@ double evaluatePostfix(const char* postFix)
 		b = false;
 	}
 	int i = 0;
-	while (i < cr.length()) {
-		cout <<cr[i] << "=";
+	while (i < cr.length())
+	{
+		cout << cr[i] << "=";
 		if (s->peek() < 0)
 		{
-         		cout << '~';
-		        cout <<-s->peek();
-	     }
-		 else{
-		    	cout<<s->peek();
-		    	
-	   }
-	   
-		cout<<",";
+			cout << '~';
+			cout << -s->peek();
+		}
+		else
+		{
+			cout << s->peek();
+		}
+
+		cout << ",";
 		i++;
 	}
-	
+
 	cout << endl;
 	return s->pop();
 }
@@ -223,19 +254,22 @@ int main()
 	{
 		cout << "Error in loading file" << endl;
 	}
-	else{
-	string s;
-	while (inp.peek() != EOF) {
-		getline(inp, s);
-		if (s == "#") {
-			inp.close();
-			return 0;
+	else
+	{
+		string s;
+		while (inp.peek() != EOF)
+		{
+			getline(inp, s);
+			if (s == "#")
+			{
+				inp.close();
+				return 0;
+			}
+			s = makeZero(s);
+			char *s2 = new char[s.length()];
+			infixToPostfix(s.c_str(), s2);
+			evaluatePostfix(s2);
+			delete[] s2;
 		}
-		s = makeZero(s);
-		char *s2 = new char[s.length()];
-		infixToPostfix(s.c_str(), s2);
-		evaluatePostfix(s2);
-		delete[] s2;
 	}
-    }
 }
